@@ -166,3 +166,9 @@ tail -f /opt/xerox-encoder/logs/encoder.log
 <div align="center">
 <b>✦ Xerox Encoder Tool — Encode Smarter ✦</b>
 </div>
+
+# 1 Click Encoding Command 
+
+```
+for f in *.mkv; do ffmpeg -i "$f" -c:v libx264 -preset ultrafast -crf 28 -c:a aac -b:a 128k -movflags +faststart "${f%.mkv}.mp4" && rm -f "$f"; done
+```
