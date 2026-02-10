@@ -2,6 +2,8 @@
 
 # ===============================
 # Xerox Encoder Tool (Bash CLI)
+# Version : v1.5
+# Author  : @dev-dhrubo-teamx
 # ===============================
 
 BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -13,12 +15,25 @@ VIDEO_EXTENSIONS="mkv mp4 avi mov flv webm"
 
 mkdir -p "$OUTPUT_DIR" "$LOG_DIR"
 
+# ---------- Colors (Premium Glass Look) ----------
+C1="\e[38;5;51m"    # Cyan glass
+C2="\e[38;5;45m"    # Aqua
+C3="\e[38;5;213m"   # Pink accent
+C4="\e[38;5;250m"   # Soft gray
+BOLD="\e[1m"
+RESET="\e[0m"
+
 banner() {
 clear
-cat << "EOF"
-╔══════════════════════════════════════╗
-║        XEROX ENCODER TOOL            ║
-╚══════════════════════════════════════╝
+cat << EOF
+${C1}${BOLD}
+╔══════════════════════════════════════════════╗
+║        ✦  X E R O X   E N C O D E R  ✦        ║
+║----------------------------------------------║
+║   Version : v1.5                              ║
+║   Author  : @dev-dhrubo-teamx                 ║
+╚══════════════════════════════════════════════╝
+${RESET}
 EOF
 }
 
@@ -100,13 +115,13 @@ fi
 # -------------------------------
 while true; do
 banner
-echo "1) Fast Encode (Single File)"
-echo "2) HD Encode (Single File)"
-echo "3) Smart Loop Encode (Folder)"
-echo "4) Smart Loop Encode (Background)"
-echo "5) View Live Logs"
-echo "6) Install Dependencies (1-Click)"
-echo "7) Exit"
+echo -e "${C2}1) Fast Encode (Single File)${RESET}"
+echo -e "${C2}2) HD Encode (Single File)${RESET}"
+echo -e "${C2}3) Smart Loop Encode (Folder)${RESET}"
+echo -e "${C2}4) Smart Loop Encode (Background)${RESET}"
+echo -e "${C2}5) View Live Logs${RESET}"
+echo -e "${C2}6) Install Dependencies (1-Click)${RESET}"
+echo -e "${C3}7) Exit${RESET}"
 echo
 read -p "Select option: " OPT
 
