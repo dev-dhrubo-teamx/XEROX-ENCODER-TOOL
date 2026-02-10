@@ -59,4 +59,4 @@ echo " 🚀 Launching Xerox Encoder Tool..."
 echo "======================================"
 
 # AUTO RUN
-echo Type: xerox
+echo xerox
