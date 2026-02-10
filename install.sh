@@ -15,7 +15,7 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# Install required packages
+# Install dependencies
 echo "[+] Installing dependencies..."
 if command -v apt >/dev/null 2>&1; then
   apt update
@@ -29,14 +29,11 @@ else
   exit 1
 fi
 
-# Remove old install if exists
-if [ -d "$INSTALL_DIR" ]; then
-  echo "[*] Removing old installation..."
-  rm -rf "$INSTALL_DIR"
-fi
+# Remove old installation
+rm -rf "$INSTALL_DIR"
 
-# Clone repo
-echo "[+] Cloning GitHub repository..."
+# Clone repository
+echo "[+] Cloning repository..."
 git clone "$REPO_URL" "$INSTALL_DIR"
 
 # Make main CLI executable
@@ -47,6 +44,9 @@ ln -sf "$INSTALL_DIR/xerox.sh" "$BIN_PATH"
 
 echo
 echo "======================================"
-echo " ✅ Xerox Encoder Tool Installed"
-echo " 👉 Run command: xerox"
+echo " ✅ Installation completed"
+echo " 🚀 Launching Xerox Encoder Tool..."
 echo "======================================"
+
+# 🔥 AUTO RUN (THIS WAS MISSING)
+exec xerox
