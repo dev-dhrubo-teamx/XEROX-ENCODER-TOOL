@@ -54,8 +54,8 @@ ln -sf "$INSTALL_DIR/xerox.sh" "$BIN_PATH"
 
 echo
 echo "======================================"
-echo " ✅ Installation completed"
-echo " 🚀 Launching Xerox Encoder Tool..."
+echo " ✅ Installation completed successfully"
+echo " 👉 Now type: xerox"
 echo "======================================"
 
 # AUTO RUN
