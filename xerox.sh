@@ -1,7 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-OUTPUT_DIR="./output"
-LOG_DIR="./logs"
+# ===============================
+# Xerox Encoder Tool (Bash CLI)
+# ===============================
+
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+OUTPUT_DIR="$BASE_DIR/output"
+LOG_DIR="$BASE_DIR/logs"
 LOG_FILE="$LOG_DIR/encoder.log"
 
 VIDEO_EXTENSIONS="mkv mp4 avi mov flv webm"
@@ -20,11 +25,11 @@ EOF
 install_deps() {
 echo "[+] Installing dependencies..." | tee -a "$LOG_FILE"
 if command -v apt >/dev/null; then
-    sudo apt update && sudo apt install -y ffmpeg
+    apt update && apt install -y ffmpeg
 elif command -v dnf >/dev/null; then
-    sudo dnf install -y ffmpeg
+    dnf install -y ffmpeg
 elif command -v pacman >/dev/null; then
-    sudo pacman -S --noconfirm ffmpeg
+    pacman -S --noconfirm ffmpeg
 else
     echo "[-] Unsupported package manager" | tee -a "$LOG_FILE"
     exit 1
@@ -36,14 +41,16 @@ fast_encode() {
 read -p "Input video file: " INPUT
 OUT="$OUTPUT_DIR/$(basename "${INPUT%.*}").mp4"
 ffmpeg -i "$INPUT" -c:v libx264 -preset veryfast -crf 28 -c:a copy "$OUT" \
-| tee -a "$LOG_FILE"
+>> "$LOG_FILE" 2>&1
+echo "[✓] Done: $OUT"
 }
 
 hd_encode() {
 read -p "Input video file: " INPUT
 OUT="$OUTPUT_DIR/$(basename "${INPUT%.*}").mp4"
 ffmpeg -i "$INPUT" -c:v libx264 -preset slow -crf 18 -c:a aac -b:a 192k "$OUT" \
-| tee -a "$LOG_FILE"
+>> "$LOG_FILE" 2>&1
+echo "[✓] Done: $OUT"
 }
 
 smart_loop() {
@@ -51,7 +58,7 @@ read -p "Folder path: " DIR
 
 for EXT in $VIDEO_EXTENSIONS; do
     find "$DIR" -type f -iname "*.$EXT"
-done | while read FILE; do
+done | while read -r FILE; do
     BASENAME=$(basename "${FILE%.*}")
     OUT="$OUTPUT_DIR/$BASENAME.mp4"
 
@@ -75,15 +82,22 @@ echo "[✓] Background loop started"
 }
 
 view_logs() {
+echo "Press CTRL+C to exit logs"
+sleep 1
 tail -f "$LOG_FILE"
 }
 
+# -------------------------------
 # Background mode handler
+# -------------------------------
 if [[ "$1" == "--bg-loop" ]]; then
     smart_loop "$2"
     exit 0
 fi
 
+# -------------------------------
+# Main CLI Loop (minipanel style)
+# -------------------------------
 while true; do
 banner
 echo "1) Fast Encode (Single File)"
@@ -93,9 +107,10 @@ echo "4) Smart Loop Encode (Background)"
 echo "5) View Live Logs"
 echo "6) Install Dependencies (1-Click)"
 echo "7) Exit"
+echo
 read -p "Select option: " OPT
 
-case $OPT in
+case "$OPT" in
 1) fast_encode ;;
 2) hd_encode ;;
 3) smart_loop ;;
@@ -103,7 +118,7 @@ case $OPT in
 5) view_logs ;;
 6) install_deps ;;
 7) exit 0 ;;
-*) echo "Invalid option" ;;
+*) echo "Invalid option"; sleep 1 ;;
 esac
 
 read -p "Press Enter to continue..."
